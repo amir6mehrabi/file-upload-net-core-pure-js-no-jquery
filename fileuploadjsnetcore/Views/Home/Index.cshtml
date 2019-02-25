@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div style="margin:12px 12px">
+
+    <form  method="post" enctype="multipart/form-data">
+        <input multiple id="fu" type="file" name="name" value="" 
+               onchange="readUR(this)"/>
+        <input type="submit" onclick="uploadFiles()"/>
+        <div id="imgss" >
+
+        </div>
+    </form>
+    <script>
+        
+        let files1 = [];
+      
+      //this method will be called whene file upload is clicked   
+        let readUR = (e) => {
+            for (var i = 0; i < e.files.length; i++) {
+                
+                var para = document.createElement("button");
+                para.textContent = "image number #"+i;
+                para.type = "button";
+
+
+                //this will be called whene button is clicked
+                para.onclick = (e) => {
+                    {
+                        //for removin files
+                        files1.splice(e.target.value, 1);
+                        document.getElementById("img" + e.target.value).remove();
+                    }
+                }
+              
+                para.value = i;
+                para.id = 'img' + i;
+                para.className = 'removeimg';
+                document.getElementById("imgss").appendChild(para);
+           }
+
+            //for adding selected files
+            files1.push.apply(files1, e.files);
+           document.getElementById("fu").value = "";
+         
+        } 
+
+        // this method upload your files by clicking on submit
+        let uploadFiles = () => {
+            let formData = new FormData();
+            let req = new XMLHttpRequest();
+
+            //insted of '/Home/IndexPost' you can replace your back-end api(php,node-js,.net core,.net and ...)
+            req.open("POST", '/Home/IndexPost');
+            for (var i = 0; i < files1.length; i++) {
+                formData.append("photo" , files1[i]);
+            }
+            req.send(formData);
+        }
+    </script>
+</div>
